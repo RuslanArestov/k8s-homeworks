@@ -14,8 +14,11 @@ spec:
     spec:
       initContainers:
       - name: delay
-        image: busybox:latest
-        command: ['sleep', '15']
+        image: busybox:1.28
+        command:
+          - sh
+          - -c 
+          - 'until nslookup nginx-svc; do echo "Waiting for the availability of the service"; sleep 2; done'
       containers:
       - name: nginx
         image: nginx:latest
