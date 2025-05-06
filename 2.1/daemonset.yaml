@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: test-volume2
+  labels:
+    app: web
+spec:
+  selector:
+    matchLabels:
+      app: multitool
+  template:
+    metadata:
+      labels:
+        app: multitool
+    spec:
+      containers:
+      - name: multitool
+        image: praqma/network-multitool:alpine-extra
+        volumeMounts:
+        - name: vol
+          mountPath: /share 
+      volumes:
+      - name: vol
+        hostPath:
+          path: /var/log/
