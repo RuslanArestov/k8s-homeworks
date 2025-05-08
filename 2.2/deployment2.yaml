@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-volume
+  labels:
+    app: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: multitool
+  template:
+    metadata:
+      labels:
+        app: multitool
+    spec:
+      containers:
+      - name: multitool
+        image: praqma/network-multitool:alpine-extra
+        volumeMounts:
+        - name: vol
+          mountPath: /share
+      volumes:
+      - name: vol
+        persistentVolumeClaim:
+          claimName: pvc-vol

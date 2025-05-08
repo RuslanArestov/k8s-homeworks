@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-volume
+  labels:
+    app: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: busybox-multitool
+  template:
+    metadata:
+      labels:
+        app: busybox-multitool
+    spec:
+      containers:
+      - name: busybox
+        image: busybox:1.28
+        command: ['sh', '-c', 'i=1; while true; do echo "message $i" >> /share/test.txt; i=$((i+1)); sleep 5; done']
+        volumeMounts:
+        - name: vol
+          mountPath: /share
+      - name: multitool
+        image: praqma/network-multitool:alpine-extra
+        volumeMounts:
+        - name: vol
+          mountPath: /share
+      volumes:
+      - name: vol
+        persistentVolumeClaim:
+          claimName: pvc-vol
